@@ -1,6 +1,6 @@
 import sys
 import os
-from sh import ffmpeg, rm, mediainfo
+from sh import ffmpeg, rm, mediainfo, node
 from time import strptime
 import datetime
 
@@ -49,12 +49,14 @@ def fit_video_to_seconds(video, target_seconds):
         print("Original length ok. %s is under target maximum %s s." % (orig_len, target_seconds))
         return video
 
-    slowdown_factor = target_seconds/orig_len
+    slowdown_factor = float(target_seconds)/float(orig_len)
     print("Slowing down video by factor %0.3f"%slowdown_factor+
           " to fit original length %02d"%orig_len+" to target "+str(target_seconds))
     
-    ffmpeg("-y","-i", video, "-filter:v", 'setpts='+"%0.3f"%slowdown_factor+'*PTS',
-           "short.mp4", _err="uploader.log")
+    # ffmpeg("-y","-i", video, "-filter:v", 'setpts='+"%0.3f"%slowdown_factor+'*PTS',
+    #        "short.mp4", _err="uploader.log")
+    
+    ffmpeg("-y","-i", video, "-filter:v", 'setpts='+"%0.3f"%slowdown_factor+'*PTS', "-b:v", "1000k", "-r", "29.970", "-profile:v", "main", "-level", "3", "short.mp4", _err="uploader.log")
     
     return "short.mp4"
 
@@ -63,25 +65,12 @@ def instagram(video):
         raise IOError("File %s not accessible." % video)
 
     print("Processing video " + video + " for Instagram.")
-    from InstagramAPI import InstagramAPI    
-    InstagramAPI = InstagramAPI("landekamera", "***REMOVED***")
-    InstagramAPI.login() # login
+    video = fit_video_to_seconds(video, 59)
+    thumbnail = make_thumbnail(video)
     
-    file = fit_video_to_seconds(video, 50)
-    thumbnail = make_thumbnail(file)
-    
-    print("Starting upload %s, %s" % (file, thumbnail))
-    upload = InstagramAPI.uploadVideo(file, thumbnail, caption=video + " less spedup")
-
-    loginfo = InstagramAPI.LastJson # last response JSON
-    print(loginfo)
+    node("./js/instagram.js", video, thumbnail, "Integration")
+    # import ipdb; ipdb.set_trace()
 
     # Cleanup
-    removables = [thumbnail, "short.mp4"]
+    [os.remove(x) for x in ["thumbnail.jpg", "short.mp4"] if os.path.isfile(x)]
     
-        
-    # rm(thumbnail)
-    # rm("shortened-video.mp4")
-    
-    import ipdb; ipdb.set_trace()
-    [os.remove(x) for x in removables if os.path.isfile(x)]
