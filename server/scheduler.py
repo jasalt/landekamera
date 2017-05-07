@@ -1,13 +1,11 @@
+import os
+
 import schedule 
 import time
 from sh import echo, ffmpeg, ls
-import os
+
 from ffmpeg import jpgs_to_mp4
 import uploader
-
-
-if not os.path.isfile("config.py"):
-    print("You haven't set up config.py yet, check config_example.py for example.")
 
 WORKDIR = "data/"
 
@@ -29,9 +27,18 @@ def process_timelapses():
 
 # time limit! 1800 frames used at most. speed up by a factor with ffmpeg
 
-# uploader.instagram("data/testing/full-crop.mp4")
+# not working uploader.instagram("Instagram-API-python/vid.mp4")
 
-uploader.instagram("Instagram-API-Python/full-short.mp4")
+# uploader.instagram("data/testing/long-crop.mp4")
+
+# uploader.instagram("data/testi.mp4") # speedup not working? whole video not ok
+# uploader.instagram("data/testing/long-crop.mp4") # not
+# uploader.instagram("data/testing/short-crop.mp4")  # OK!
+# uploader.instagram("Instagram-API-python/full-short.mp4") # ok! speedup ok! fullhd
+# uploader.instagram("Instagram-API-python/full-crop.mp4") # ok when shortened speedup ok! 640
+#uploader.instagram("data/testi.mp4") # ok when spedup at least, fullhd
+uploader.instagram("data/video/20160505.mp4")
+
 # uploader.instagram(mp4)
     
 # schedule.every().day.at("03:00").do(process-timelapses)
