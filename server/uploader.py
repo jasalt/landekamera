@@ -76,7 +76,8 @@ def instagram(video):
     video = prepare_video_to_instagram(video)
     thumbnail = make_thumbnail(video)
     
-    node("./js/instagram.js", video, thumbnail, "crop,scale,speedup")
+    node("./js/instagram-uploader.js", ig_user, ig_password,
+         video, thumbnail, "crop,scale,speedup")
     # import ipdb; ipdb.set_trace()
 
     # Cleanup

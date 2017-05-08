@@ -1,14 +1,17 @@
+#!/usr/bin/env node
+
+var args = process.argv.slice(2);  // Strip out first 2 parameters (script path, workdir)
+var username = args[0];
+var password = args[1];
+var video = args[2];
+var thumbnail = args[3];
+var caption = args[4];  // TODO: Get all parameters after this or use quoted?
+
 var Client = require('instagram-private-api').V1;
 var device = new Client.Device('landekamera');
-var storage = new Client.CookieFileStorage(__dirname + 'someuser.json');
+var storage = new Client.CookieFileStorage(__dirname + 'data/'+username+'-cookie.json');
 
-var args = process.argv.slice(2);
-var video = args[0];
-var thumbnail = args[1];
-var caption = args[2];
-
-// And go for login 
-Client.Session.create(device, storage, 'landekamera', 'XXX')
+Client.Session.create(device, storage, username, password)
     .then(function(session) {
    	// Now you have a session, we can follow / unfollow, anything...
         // MP4 is the only supported format now, pull request for any other format welcomed!
@@ -24,4 +27,3 @@ Client.Session.create(device, storage, 'landekamera', 'XXX')
                 console.log(medium.params);
             });
     });
-
