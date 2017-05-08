@@ -8,7 +8,7 @@ var thumbnail = args[1];
 var caption = args[2];
 
 // And go for login 
-Client.Session.create(device, storage, 'landekamera', '***REMOVED***')
+Client.Session.create(device, storage, 'landekamera', 'XXX')
     .then(function(session) {
    	// Now you have a session, we can follow / unfollow, anything...
         // MP4 is the only supported format now, pull request for any other format welcomed!
