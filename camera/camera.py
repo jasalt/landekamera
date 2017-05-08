@@ -44,12 +44,26 @@ def take_picture():
     if not os.path.exists(dirname):
         os.makedirs(dirname)
 
-    filename = timestamp + ".jpg"            
-    
+    filename = dirname + timestamp + ".jpg"    
     # "data/day"
-    # fswebcam -S 150 --frames 4 -r 1920x1080 --jpeg 85 --no-banner   --save $TEMP_IMG
 
-    # exiftool $TEMP_IMG -overwrite_original -GPSLatitudeRef=N -GPSLatitude=61.892220 -GPSLongitudeRef=E -GPSLongitude=25.655319 -GPSImgDirectionRef=T -GPSImgDirection=290 -Model="Logitech C930e"
+    # Try HDR?
+    # exposure_auto (menu)   : min=0 max=3 default=0 value=3
+    # exposure_absolute (int)    : min=3 max=2047 step=1 default=250 value=3 flags=inactive
+    
+    fswebcam( "-S", "150",  # skip some frames for auto exposure 
+              "--frames", "4",
+              "-r", "1920x1080",
+              "--jpeg", "88",
+              "--no-banner",
+              "--save", filename)
+
+    if image_is_dark(filename):
+        os.remove(filename)
+        return
+    
+    exiftool(filename, "-overwrite_original", "-GPSLatitudeRef=N", "-GPSLatitude=61.892220", "-GPSLongitudeRef=E", "-GPSLongitude=25.655319", "-GPSImgDirectionRef=T", "-GPSImgDirection=290", "-Model=\"Logitech C930e\"")
+
 
 def upload_dir(dir):
     # rsync
