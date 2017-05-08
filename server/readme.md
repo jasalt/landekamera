@@ -10,6 +10,7 @@ Should try if JS lib has same problem.
 
 
 # Deps
+pip install -r requirements.txt
 cd js/ && npm install instagram-private-api
 
 

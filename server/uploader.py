@@ -6,12 +6,9 @@ import datetime
 
 from config import ig_user, ig_password
 
-sys.path.insert(0, "./Instagram-API-python")
-
 def process_log(line):
     print(line)
     
-
 def get_length(video):
     '''Return video length in seconds.'''
     milliseconds = int(mediainfo("--Output=General;%Duration%", video))
@@ -68,7 +65,7 @@ def prepare_video_to_instagram(video):
            _err=process_log,_out=process_log)
     return "short.mp4"
 
-def instagram(video):
+def instagram(video, caption):
     if not os.path.isfile(video):
         raise IOError("File %s not accessible." % video)
 
@@ -76,8 +73,8 @@ def instagram(video):
     video = prepare_video_to_instagram(video)
     thumbnail = make_thumbnail(video)
     
-    node("./js/instagram-uploader.js", ig_user, ig_password,
-         video, thumbnail, "crop,scale,speedup")
+    node("./instagram-uploader.js", ig_user, ig_password,
+         video, thumbnail, caption)
     # import ipdb; ipdb.set_trace()
 
     # Cleanup

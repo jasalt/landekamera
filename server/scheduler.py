@@ -37,7 +37,7 @@ def process_timelapses():
 # uploader.instagram("Instagram-API-python/full-short.mp4") # ok! speedup ok! fullhd
 # uploader.instagram("Instagram-API-python/full-crop.mp4") # ok when shortened speedup ok! 640
 # uploader.instagram("data/testi.mp4") # ok when spedup at least, fullhd
-uploader.instagram("data/video/20160505.mp4")
+uploader.instagram("data/testing/long-crop.mp4", "Long Cropped")
 
 # uploader.instagram(mp4)
     

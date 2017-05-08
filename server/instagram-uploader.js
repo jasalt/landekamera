@@ -9,7 +9,7 @@ var caption = args[4];  // TODO: Get all parameters after this or use quoted?
 
 var Client = require('instagram-private-api').V1;
 var device = new Client.Device('landekamera');
-var storage = new Client.CookieFileStorage(__dirname + 'data/'+username+'-cookie.json');
+var storage = new Client.CookieFileStorage(__dirname + '/data/'+username+'-cookie.json');
 
 Client.Session.create(device, storage, username, password)
     .then(function(session) {
