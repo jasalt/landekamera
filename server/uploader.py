@@ -40,24 +40,32 @@ def make_thumbnail(video):
     ffmpeg("-y", "-ss", time_str, "-i", video, "-vframes", "1", "thumbnail.jpg", _err="uploader.log")
     return "thumbnail.jpg"
 
-def fit_video_to_seconds(video, target_seconds):
+def prepare_video_to_instagram(video):
     '''Make sure the video length is max target_seconds. Speed it up otherwise.
     Eg. speed up by factor of 2:
     ffmpeg -i input.mkv -filter:v "setpts=0.5*PTS" output.mkv'''
-    orig_len = get_length(video)
-    if orig_len < target_seconds:
-        print("Original length ok. %s is under target maximum %s s." % (orig_len, target_seconds))
-        return video
+    target_height = 640
+    left_offset = 300
+    
+    vf_scale = "scale=-1:%s" % target_height  # 1920x1080 -> 1137x640
+    vf_crop = ",crop=640:640:%s:0" % left_offset  # 640x640
 
-    slowdown_factor = float(target_seconds)/float(orig_len)
-    print("Slowing down video by factor %0.3f"%slowdown_factor+
-          " to fit original length %02d"%orig_len+" to target "+str(target_seconds))
+    orig_len = get_length(video)
+    target_seconds = 59
+    if orig_len < target_seconds:
+        print("Original length ok, skipping speedup. %s is under target maximum %s s."
+              % (orig_len, target_seconds))
+        vf_slowdown = ""
+    else:
+        slowdown_factor = float(target_seconds)/float(orig_len)
+        print("Too long video. Speeding up by slowing down video by factor %0.3f"%slowdown_factor+
+              " to fit original length %02d"%orig_len+" to target "+str(target_seconds))
+        vf_slowdown = ",setpts=%0.3f*PTS"      % slowdown_factor
     
-    # ffmpeg("-y","-i", video, "-filter:v", 'setpts='+"%0.3f"%slowdown_factor+'*PTS',
-    #        "short.mp4", _err="uploader.log")
-    
-    ffmpeg("-y","-i", video, "-filter:v", 'setpts='+"%0.3f"%slowdown_factor+'*PTS', "-b:v", "1000k", "-r", "29.970", "-profile:v", "main", "-level", "3", "short.mp4", _err="uploader.log")
-    
+    ffmpeg("-y","-i", video, "-filter:v", vf_scale+vf_crop+vf_slowdown,
+           "-b:v", "1000k", "-r", "29.970", "-profile:v", "main", "-level", "3", "short.mp4",
+           # err="uploader.log")
+           _err=process_log,_out=process_log)
     return "short.mp4"
 
 def instagram(video):
@@ -65,12 +73,13 @@ def instagram(video):
         raise IOError("File %s not accessible." % video)
 
     print("Processing video " + video + " for Instagram.")
-    video = fit_video_to_seconds(video, 59)
+    video = prepare_video_to_instagram(video)
     thumbnail = make_thumbnail(video)
     
-    node("./js/instagram.js", video, thumbnail, "Integration")
+    node("./js/instagram.js", video, thumbnail, "crop,scale,speedup")
     # import ipdb; ipdb.set_trace()
 
     # Cleanup
+    import ipdb; ipdb.set_trace()
     [os.remove(x) for x in ["thumbnail.jpg", "short.mp4"] if os.path.isfile(x)]
     
