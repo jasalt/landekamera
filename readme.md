@@ -14,6 +14,9 @@ Written in Python with readability in mind, utilizing [sh-library](http://amoffa
     python scheduler.py  # this is the main file for now
 
 # Notes
+## Exception handling
+https://schedule.readthedocs.io/en/stable/faq.html#what-if-my-task-throws-an-exception
+
 ## Instagram upload
 Instagram-API-python seems to only upload videos max ~10 sec, otherwise failing with vaque error message.
 Using node library instead.
