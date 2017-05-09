@@ -8,15 +8,20 @@ Additionally planned to take HDR photos, apply deflickering and run motion inter
 Written in Python with readability in mind, utilizing [sh-library](http://amoffat.github.io/sh/) for running shell utilities and [schedule](https://github.com/dbader/schedule) for scheduling actions. NodeJS library instagram-private-api is used for video uploads.
 
 # TODO Setup
-See ./install-deps.sh. 
-pip install -r requirements.txt
+    cd server
+    # install-deps.sh  # todo
+    # pip install -r requirements.txt  # todo
+    python scheduler.py  # this is the main file for now
 
 # Notes
 ## Instagram upload
 Instagram-API-python seems to only upload videos max ~10 sec, otherwise failing with vaque error message.
 Using node library instead.
 
-## Deflick
+## TODO HDR
+Use manual exposure on c930e for taking stack of images, blend them together.
+
+## TODO Deflick
 https://www.youtube.com/watch?v=aABIlQokIaM ML & Darkangerl
 ### Cyberang3l
 https://github.com/cyberang3l/timelapse-deflicker
@@ -34,6 +39,6 @@ https://youtu.be/VJbJ0btlui0?t=8m10s  (from 8m10s to 11m17s)
 IMPORTANT: only available for raw (not even SRAW!) files, i.e. .CR2, .NEF, etc; NOT FOR ANYTHING ELSE (ldr/hdr - jpg, tiff, png, etc)
 
 
-## Interpolate
-
+## TODO Motion Interpolate
+https://github.com/dthpham/butterflow
 
