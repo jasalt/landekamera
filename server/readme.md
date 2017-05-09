@@ -1,20 +1,21 @@
-https://github.com/dbader/schedule
+# Raspberry Webcam Timelapse setup
+- Take photo with webcam every 30 seconds (currently configured for Logitech C930e)
+- Convert it daily into 640x640 h264 mp4 -movie and upload to Instagram
+- TODO Also convert it into full resolution h265 mp4 video and upload to Amazon S3 for archival purposes
 
-http://amoffat.github.io/sh/
+Additionally planned to take HDR photos, apply deflickering and run motion interpolation. Most probably doing processing on some other machine however..
 
+Written in Python with readability in mind, utilizing [sh-library](http://amoffat.github.io/sh/) for running shell utilities and [schedule](https://github.com/dbader/schedule) for scheduling actions. NodeJS library instagram-private-api is used for video uploads.
 
-# Instagram upload
-Instagram-API-python seems to only upload videos max ~10 sec.
-Tried to match specs to 
-Should try if JS lib has same problem.
-
-
-# Deps
+# TODO Setup
+See ./install-deps.sh. 
 pip install -r requirements.txt
-cd js/ && npm install instagram-private-api
 
+# Notes
+## Instagram upload
+Instagram-API-python seems to only upload videos max ~10 sec, otherwise failing with vaque error message.
+Using node library instead.
 
-# TODO
 ## Deflick
 https://www.youtube.com/watch?v=aABIlQokIaM ML & Darkangerl
 ### Cyberang3l
@@ -34,3 +35,5 @@ IMPORTANT: only available for raw (not even SRAW!) files, i.e. .CR2, .NEF, etc; 
 
 
 ## Interpolate
+
+
