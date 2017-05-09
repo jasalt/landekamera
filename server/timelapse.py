@@ -16,15 +16,15 @@ def jpgs_to_mp4(source_dir, target_dir):
     if target_dir[-1:] != "/":
         target_dir = target_dir + "/"
 
-    timestamp = source_dir[:-1][-7:]
+    timestamp = source_dir[:-1][-6:]
     target_filename = target_dir + timestamp + ".mp4"
 
-    print("Converting jpg's from %s to %s.mp4. Framerate %s" % (source_dir, target_dir, FRAMERATE))    
+    print("Converting jpg's from %s to %s with framerate %s" % (source_dir, target_filename, FRAMERATE))    
     
-    ffmpeg("-r", FRAMERATE, "-pattern_type", "glob", "-i", source_dir + "*.jpg", "-c:v", "libx264", "-r", FRAMERATE, target_filename, _err="shell.log")
+    ffmpeg("-y", "-r", FRAMERATE, "-pattern_type", "glob", "-i", source_dir + "*.jpg", "-c:v", "libx264", "-r", FRAMERATE, target_filename, _err="timelapse.log")
 
     # then move the pics to archive
     
-    print("Done. Archiving source jpg's.")
-    mv(source_dir, "data/archive/jpg/")
+    #print("Done. Archiving source jpg's.")
+    #mv(source_dir, "data/archive/jpg/")
     return target_filename
