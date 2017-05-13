@@ -58,7 +58,7 @@ if "--camera" in sys.argv:
     print("Starting timelapse camera job.")
     camera.initialize()
     camera.take_photo()
-    schedule.every(30).seconds.do(take_photo)
+    schedule.every(30).seconds.do(camera.take_photo)
     
 import ipdb; ipdb.set_trace()
     
