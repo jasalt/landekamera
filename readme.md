@@ -9,9 +9,24 @@ Written in Python with readability in mind, utilizing [sh-library](http://amoffa
 
 # TODO Setup
     cd server
-    # install-deps.sh  # todo
-    # pip install -r requirements.txt  # todo
-    python scheduler.py  # this is the main file for now
+    # install-deps.sh  # TODO
+    # pip install -r requirements.txt  # TODO, bloated
+    python run.py  # this is the main file for now
+
+
+## Raspberry / Raspbian Jessie
+
+Raspbian does not have `ffmpeg`, so `sudo apt-get install libav-tools` and `sudo ln -s /usr/bin/avconv /usr/bin/ffmpeg`.
+
+cp config_example.py config.Fix
+
+
+    # Fix problem with ipdb installation
+    sudo pip install --upgrade setuptools pip
+    sudo pip list
+    sudo pip install ipython
+
+
 
 # Notes
 ## Exception handling
