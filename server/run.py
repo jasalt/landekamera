@@ -10,17 +10,18 @@ from sh import echo, ffmpeg, ls
 import timelapse
 import uploader
 
-today = datetime.datetime.now().strftime("%y%m%d")
 
 def run_threaded(job_func):
     job_thread = threading.Thread(target=job_func)
     job_thread.start()
 
 def upload_yesterday_ig():
+    today = datetime.datetime.now().strftime("%y%m%d")
     yesterday = str(int(today) - 1)
+
     video = timelapse.jpgs_to_mp4("data/" + yesterday, "data/")
-    uploader.instagram(video, "TESTMODE ON...")
-    import ipdb; ipdb.set_trace()
+    uploader.instagram(video, yesterday)
+    print("everything seems ok, should rm video now")
     # If OK, remove video
 
 def upload_s3():
@@ -36,22 +37,33 @@ def upload_s3():
 # uploader.instagram("data/video/20160505.mp4")
 # uploader.instagram("data/testing/long-crop.mp4", "Long Cropped")
 
-if len(sys.argv) == 1:
-    print("Nothing to be done, dropping to interactive mode")
-    #import ipdb; ipdb.set_trace()
-    upload_yesterday_ig()
+def print_help():
+    print('''Usage: python run.py
+                     --i             Run debug/interactive mode.
+                     --instagram     Starts daily Instagram uploader job.
+                     --camera        Starts taking timelapses.
+                     --youtube       TODO upload files to Youtube for archival, remove after uploaded?
+                     --loop          TODO delete oldest dir if less than 500MB space available on /
+
+Ideally you could run:
+    python run.py --camera --instagram [TODO --youtube --loop]
+But currently better to test every single functionality on it's own process/tmux window.
+
+''')
+
+if "--i" in sys.argv:
+    print("Dropping to debugger/interactive mode.")
+    import ipdb; ipdb.set_trace()
+    # upload_yesterday_ig()
     # exit(1)
     
 if "--ig" in sys.argv:
-    # Create process for it?
     print("Starting daily instagram upload job.")
-    # schedule.every().day.at("03:00").do(run_threaded, upload_yesterday_ig)
     schedule.every().day.at("03:00").do(upload_yesterday_ig)
 
-if "--s3" in sys.argv:
-    # schedule.every().day.at("05:00").do(upload_s3)
-    print("Starting S3 upload job.")
-    print("TODO process all into h265 video and upload to S3")
+    # TODO run threaded
+    # schedule.every().day.at("03:00").do(run_threaded, upload_yesterday_ig)
+
 
 if "--camera" in sys.argv:
     import camera
@@ -59,8 +71,12 @@ if "--camera" in sys.argv:
     camera.initialize()
     camera.take_photo()
     schedule.every(30).seconds.do(camera.take_photo)
+
+if len(sys.argv) == 1:
+    print_help()
+    exit(1)
     
-import ipdb; ipdb.set_trace()
+print("Starting wait for scheduled actions")
     
 while True:
      schedule.run_pending()

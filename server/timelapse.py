@@ -21,7 +21,7 @@ def jpgs_to_mp4(source_dir, target_dir):
 
     print("Converting jpg's from %s to %s with framerate %s" % (source_dir, target_filename, FRAMERATE))    
     
-    ffmpeg("-y", "-r", FRAMERATE, "-pattern_type", "glob", "-i", source_dir + "*.jpg", "-c:v", "libx264", "-r", FRAMERATE, target_filename, _err="timelapse.log")
+    ffmpeg("-y", "-r", FRAMERATE, "-pattern_type", "glob", "-i", source_dir + "*.jpg", "-c:v", "libx264", "-r", FRAMERATE, target_filename, _err="timelapse.log", _out="timelapse.log")
 
     # then move the pics to archive
     

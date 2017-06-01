@@ -22,7 +22,7 @@ def calculate_deviation(image):
     return float(deviation[1:-1])  # strip quotes, convert to float
 
 def photo_is_dark(photo):
-    min_deviation = 850  # pretty much black with c930e
+    min_deviation = 800  # pretty much black with c930e
     deviation = calculate_deviation(photo)
 
     if deviation < min_deviation:
@@ -58,11 +58,10 @@ def take_photo():
               "-r", "1920x1080",
               "--jpeg", "88",
               "--no-banner",
-              "--save", filename)
+              "--save", filename, _out="camera.log", _err="camera.log")
 
     if photo_is_dark(filename):
         os.remove(filename)  # don't save photos that don't have any light
         return  # TODO sleep longer if dark?
     
 #    exiftool(filename, "-overwrite_original", "-GPSLatitudeRef=N", "-GPSLatitude=61.892220", "-GPSLongitudeRef=E", "-GPSLongitude=25.655319", "-GPSImgDirectionRef=T", "-GPSImgDirection=290", "-Model=\"Logitech C930e\"")
-
